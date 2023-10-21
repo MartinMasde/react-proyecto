@@ -3,11 +3,12 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import {  CardActionArea, CardActions } from '@mui/material';
-import SearchInput from './SearchInput'
+// import SearchInput from './SearchInput'
+import { RepoFinder } from '../RepoFinder/RepoFinder';
 
 export default function SearchCard() {
   return (
-    <Card sx={{ maxWidth: 500 }}>
+    <Card sx={{ maxWidth: "60vw" }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -22,9 +23,9 @@ export default function SearchCard() {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      <CardActions sx={{justifyContent: 'center', margin: '10px'}}>
 
-        <SearchInput />
+        <RepoFinder/>
 
       </CardActions>
     </Card>
