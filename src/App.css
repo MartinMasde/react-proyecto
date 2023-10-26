@@ -13,18 +13,22 @@
   margin-bottom: 30px;
 }
 
+
+
 .results ul {
   list-style-type: none;
   padding: 0;
 }
 
 .results li {
+  list-style: none;
   margin-bottom: 5px;
   cursor: pointer;
   border: 1px solid transparent;
   box-shadow: gray 0px 0px 5px;
   border-color: rgb(159, 202, 226);
   text-align: left;
+  padding: 3px;
 }
 
 .details {
