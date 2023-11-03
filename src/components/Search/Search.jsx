@@ -18,7 +18,7 @@ export default function SearchCard() {
           alt="green iguana"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h4" component="div">
             Buscar Repositorio en GitHub
           </Typography>
         </CardContent>
