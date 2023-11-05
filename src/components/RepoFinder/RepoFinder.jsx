@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Octokit } from "@octokit/rest"; // Importa Octokit para poder hacer la paginación
-import { Pagination } from "@mui/material";
+import { Pagination, Box } from "@mui/material";
 import classes from "./RepoFinder.module.css";
-import { Box } from "@mui/material";
+// import { Box } from "@mui/material";
 import { DetailsComponent } from "../RepoDetails/RepoDetails";
 
 const octokit = new Octokit(); // Instancia de Octokit para poder hacer la paginación
