@@ -40,20 +40,6 @@ export const RepoFinder = () => {
     }
   };
 
-  // const handleSearch = async () => {
-  //   try {
-  //     const response = await octokit.search.repos({  // Utiliza el método search.repos de Octokit
-  //       q: searchTerm,
-  //       page: page,
-  //       per_page: 30 // Número de resultados por página
-  //     });
-  //     setResults(response.data.items);
-  //     setTotalPages(Math.ceil(response.data.total_count / 30)); // 30 resultados por página
-  //   } catch (error) {
-  //     console.error("Error: ", error.message);
-  //   }
-  // };
-
   useEffect(() => {
     handleSearch();
   }, [page]); // Se ejecuta cada vez que cambia la página
@@ -87,15 +73,14 @@ export const RepoFinder = () => {
 
       {selectedItem ? (
         <DetailsComponent selectedItem={selectedItem} handleBack={handleBack} />
-
       ) : (
         <div>
           <ul className={classes.results}>
             {results.map((item) => (
               <li key={item.id} onClick={() => handleItemClick(item)}>
                 <strong> {item.full_name} </strong> {item.description}
-                <strong> {item.login} </strong>{" "}
-                <a href={item.avatar_url} target="_blank" rel="noopener noreferrer"> {item.avatar_url} </a>{" "} {/* Muestra el nombre del usuario */}
+                <strong> {item.login} </strong>{" "} {/* Muestra el nombre del usuario */}
+                <a href={item.avatar_url} target="_blank" rel="noopener noreferrer"> {item.avatar_url} </a>{" "} 
               </li>
             ))}
           </ul>
