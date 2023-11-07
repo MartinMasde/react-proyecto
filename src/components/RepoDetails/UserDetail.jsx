@@ -1,22 +1,16 @@
 import PropTypes from "prop-types";
 import classes from "./RepoDetails.module.css";
 
-export const DetailsComponent = ({ selectedItem, handleBack }) => {
+export const UserDetails = ({ selectedItem, handleBack }) => {
   return (
     <>
       <div className={classes.details}>
-        <h2>Nombre Repositorio: {selectedItem.full_name}</h2>
+        <h2>Nombre Usuario: {selectedItem.login}</h2>
         <p>
-          <strong>Descripción: </strong> {selectedItem.description}
-        </p>
-        <p>
-          <strong>Nombre Autor: </strong> {selectedItem.name}
+        <strong>Avatar: </strong> <a href={selectedItem.avatar_url} target="_blank" rel="noopener noreferrer"> {selectedItem.avatar_url}</a>
         </p>
         <p>
           <strong>URL: </strong> <a href={selectedItem.html_url} target="_blank" rel="noopener noreferrer"> {selectedItem.html_url}</a>
-        </p>
-        <p>
-          <strong> ⭐️ Estrellas:</strong> {selectedItem.stargazers_count}{" "}
         </p>
       </div>
       <div className={classes.button}>
@@ -26,9 +20,7 @@ export const DetailsComponent = ({ selectedItem, handleBack }) => {
   );
 };
 
-DetailsComponent.propTypes = {
+UserDetails.propTypes = {
   selectedItem: PropTypes.object,
   handleBack: PropTypes.func,
 };
-
-

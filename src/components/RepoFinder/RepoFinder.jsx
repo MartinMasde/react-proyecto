@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Octokit } from "@octokit/rest"; // Importa Octokit para poder hacer la paginación
 import { Pagination, Box } from "@mui/material";
 import classes from "./RepoFinder.module.css";
-// import { Box } from "@mui/material";
 import { DetailsComponent } from "../RepoDetails/RepoDetails";
+import { RepoList } from "../RepoDetails/RepoList";
+import { UserDetails } from "../RepoDetails/UserDetail";
 
 const octokit = new Octokit(); // Instancia de Octokit para poder hacer la paginación
 
@@ -22,9 +23,16 @@ export const RepoFinder = () => {
       if (searchTerm.startsWith("@")) {
         // Si el input empieza con @, buscar usuario
         const username = searchTerm.substring(1); // Eliminar el @ del input
-        response = await octokit.users.getByUsername({ username });
-        setResults([response.data]); // Almacenar el usuario en la lista de resultados
-        setTotalPages(1); // Un solo resultado para el usuario
+        // response = await octokit.users.getByUsername({ username });
+        // setResults([response.data]); // Almacenar el usuario en la lista de resultados
+        // setTotalPages(1); // Un solo resultado para el usuario
+        response = await octokit.search.users({
+          q: username,
+          page: page,
+          per_page: 30,
+        });
+        setResults(response.data.items);
+        setTotalPages(Math.ceil(response.data.total_count / 30));
       } else {
         // Si no empieza con @, busca el repositorio
         response = await octokit.search.repos({
@@ -44,8 +52,18 @@ export const RepoFinder = () => {
     handleSearch();
   }, [page]); // Se ejecuta cada vez que cambia la página
 
+
+  // asignar que tipo de item es
+  const [selectedType, setSelectedType] = useState(null);
+
   const handleItemClick = (item) => {
     setSelectedItem(item);
+    // Verificar si el item es un usuario o un repositorio
+    if (item.type === 'User') {
+      setSelectedType('user');
+    } else {
+      setSelectedType('repo');
+    }
   };
 
   const handleBack = () => {
@@ -71,19 +89,18 @@ export const RepoFinder = () => {
         </button>
       </div>
 
-      {selectedItem ? (
+       {/*  Código para mostrar los detalles del usuario o del repositorio  */}
+      {selectedItem && selectedType === "user" && (
+        <UserDetails selectedItem={selectedItem} handleBack={handleBack} />
+      )}
+      {selectedItem && selectedType === "repo" && (
         <DetailsComponent selectedItem={selectedItem} handleBack={handleBack} />
-      ) : (
+      )}
+      {!selectedItem && (
+        // Código para mostrar la lista de repositorios y la paginación
         <div>
-          <ul className={classes.results}>
-            {results.map((item) => (
-              <li key={item.id} onClick={() => handleItemClick(item)}>
-                <strong> {item.full_name} </strong> {item.description}
-                <strong> {item.login} </strong>{" "} {/* Muestra el nombre del usuario */}
-                <a href={item.avatar_url} target="_blank" rel="noopener noreferrer"> {item.avatar_url} </a>{" "} 
-              </li>
-            ))}
-          </ul>
+          <RepoList results={results} handleItemClick={handleItemClick} />
+
           {/* Agrega el componente de paginación */}
           <Box sx={{ display: "flex", justifyContent: "center", m: 2, p: 1 }}>
             <Pagination
