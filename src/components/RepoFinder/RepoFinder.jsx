@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { Octokit } from "@octokit/rest"; // Importa Octokit para poder hacer la paginación
+// import { Octokit } from "@octokit/rest"; // Importa Octokit para poder hacer la paginación
 import { Pagination, Box } from "@mui/material";
 import classes from "./RepoFinder.module.css";
 import { DetailsComponent } from "../RepoDetails/RepoDetails";
 import { RepoList } from "../RepoDetails/RepoList";
 import { UserDetails } from "../RepoDetails/UserDetail";
+import { QueriesList } from "../RepoDetails/historyList";
 
-const octokit = new Octokit(); // Instancia de Octokit para poder hacer la paginación
+// const octokit = new Octokit(); // Instancia de Octokit para poder hacer la paginación
 
 export const RepoFinder = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,33 +16,67 @@ export const RepoFinder = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [queryList, setQueryList] = useState([]);
+
+  const urlQueries = "http://localhost:3000/api/github/queries";
+
+  // METODO PARA LISTAR LAS QUERIES DE LA BD
+  const fetchQueries = async () => {
+    try {
+      const response = await fetch(urlQueries);
+      const data = await response.json();
+      setQueryList(data);
+    } catch (error) {
+      console.log("Error:  ", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchQueries();
+  }, [results]);
+
   const handleSearch = async () => {
     try {
       let response;
+      let data;
+      const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTerm}`;
+      const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTerm}`;
 
       // Verificar si el input parece ser un nombre de usuario (empieza con @)
       if (searchTerm.startsWith("@")) {
         // Si el input empieza con @, buscar usuario
-        const username = searchTerm.substring(1); // Eliminar el @ del input
+        // const username = searchTerm.substring(1); // Eliminar el @ del input
         // response = await octokit.users.getByUsername({ username });
-        // setResults([response.data]); // Almacenar el usuario en la lista de resultados
+        // setResults([response]); // Almacenar el usuario en la lista de resultados
         // setTotalPages(1); // Un solo resultado para el usuario
-        response = await octokit.search.users({
-          q: username,
-          page: page,
-          per_page: 30,
-        });
-        setResults(response.data.items);
-        setTotalPages(Math.ceil(response.data.total_count / 30));
+        const fetchData = async () => {
+          try {
+            response = await fetch(urlUsers);
+            data = await response.json();
+          } catch (error) {
+            console.log("Error:  ", error.message);
+          }
+          return data;
+        };
+
+        response = await fetchData();
+        setResults(response.items);
+        setTotalPages(Math.ceil(response.total_count / 30));
       } else {
-        // Si no empieza con @, busca el repositorio
-        response = await octokit.search.repos({
-          q: searchTerm,
-          page: page,
-          per_page: 30,
-        });
-        setResults(response.data.items);
-        setTotalPages(Math.ceil(response.data.total_count / 30));
+        // Si no empieza con @, busca el
+        const fetchData = async () => {
+          try {
+            response = await fetch(urlRepos);
+            data = await response.json();
+          } catch (error) {
+            console.log("Error:  ", error.message);
+          }
+          return data;
+        };
+        response = await fetchData();
+
+        setResults(response.items);
+        setTotalPages(Math.ceil(response.total_count / 30));
       }
     } catch (error) {
       console.error("Error: ", error.message);
@@ -52,17 +87,16 @@ export const RepoFinder = () => {
     handleSearch();
   }, [page]); // Se ejecuta cada vez que cambia la página
 
-
   // asignar que tipo de item es
   const [selectedType, setSelectedType] = useState(null);
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
     // Verificar si el item es un usuario o un repositorio
-    if (item.type === 'User') {
-      setSelectedType('user');
+    if (item.type === "User") {
+      setSelectedType("user");
     } else {
-      setSelectedType('repo');
+      setSelectedType("repo");
     }
   };
 
@@ -74,8 +108,9 @@ export const RepoFinder = () => {
     setPage(value);
   };
 
+ 
   return (
-    <div className="App">
+    <div>
       <div className="search-bar">
         <input
           className={classes.input}
@@ -89,7 +124,7 @@ export const RepoFinder = () => {
         </button>
       </div>
 
-       {/*  Código para mostrar los detalles del usuario o del repositorio  */}
+      {/*  Código para mostrar los detalles del usuario o del repositorio  */}
       {selectedItem && selectedType === "user" && (
         <UserDetails selectedItem={selectedItem} handleBack={handleBack} />
       )}
@@ -98,7 +133,8 @@ export const RepoFinder = () => {
       )}
       {!selectedItem && (
         // Código para mostrar la lista de repositorios y la paginación
-        <div>
+
+        <div className={classes.dosColumnas}>
           <RepoList results={results} handleItemClick={handleItemClick} />
 
           {/* Agrega el componente de paginación */}
@@ -113,6 +149,11 @@ export const RepoFinder = () => {
           </Box>
         </div>
       )}
+
+      <div >
+        <h2>Historial de busquedas</h2>
+        <QueriesList queries={queryList} />
+      </div>
     </div>
   );
 };

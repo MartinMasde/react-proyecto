@@ -3,9 +3,9 @@ import classes from "./RepoDetails.module.css";
 
 export const RepoList = ({ results, handleItemClick }) => {
     return (
-        <div>
+        <div className={classes.list}>
             <ul className={classes.results}>
-                {results.map((item) => (
+                {results?.map((item) => (
                 <li key={item.id} onClick={() => handleItemClick(item)}>
                 <strong> {item.full_name} </strong> {item.description}
                 <strong> {item.login} </strong>{" "} {/* Muestra el nombre del usuario */}

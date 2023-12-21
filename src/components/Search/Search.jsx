@@ -18,14 +18,14 @@ export default function SearchCard() {
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            Buscar Repositorio en GitHub
+            Buscar Repositorio en GitHub  
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions sx={{justifyContent: 'center', margin: '10px'}}>
 
         <RepoFinder/>
-
+ 
       </CardActions>
     </Card>
   );

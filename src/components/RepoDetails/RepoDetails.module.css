@@ -5,11 +5,20 @@
 .button {
     padding: 1rem;
 }
+.button2 {
+  background-color: #2919d2;
+  border: none;
+  color: white;
+  padding: 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.8rem;
+  margin: 5px 0px 5px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
 
-.results ul {
-    list-style-type: none;
-    padding: 0;
-  }
   .results li {
     list-style-type: none;
     margin-bottom: 5px;
@@ -20,3 +29,23 @@
     text-align: left;
     padding: 3px;
   }
+
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .queriesList li {
+    list-style-type: none;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border: 1px solid black;
+    box-shadow: gray 0px 0px 5px;
+    border-color: rgb(159, 202, 226);
+    text-align: left;
+    padding: 3px;
+  }
+
+
