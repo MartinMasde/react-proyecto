@@ -35,6 +35,30 @@ export const RepoFinder = () => {
     fetchQueries();
   }, [results]);
 
+  const deleteQuery = (id) => {
+    const filteredQueryList = queryList.filter((query) => query._id !== id);
+
+    setQueryList(filteredQueryList);
+  };
+
+  const deleteQueryClick = async (query) => {
+    if (query) {
+      const urlDelete = `http://localhost:3000/api/github/delete/${query._id}`;
+      try {
+        const response = await fetch(urlDelete, { method: "Delete" });
+        if (response.ok) {
+          deleteQuery(query._id);
+        }
+      } catch (error) {
+        console.log("Error:  ", error.message);
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //     deleteQueryClick();
+  // } , [handleQueryClick]);
+
   const handleSearch = async () => {
     try {
       let response;
@@ -108,7 +132,6 @@ export const RepoFinder = () => {
     setPage(value);
   };
 
- 
   return (
     <div>
       <div className="search-bar">
@@ -150,9 +173,9 @@ export const RepoFinder = () => {
         </div>
       )}
 
-      <div >
-        <h2>Historial de busquedas</h2>
-        <QueriesList queries={queryList} />
+      <div>
+        <h2>Historial de Busquedas</h2>
+        <QueriesList queries={queryList} handleQueryClick={deleteQueryClick} />
       </div>
     </div>
   );
