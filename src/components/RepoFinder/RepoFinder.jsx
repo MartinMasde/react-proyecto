@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-// import { Octokit } from "@octokit/rest"; // Importa Octokit para poder hacer la paginación
 import { Pagination, Box } from "@mui/material";
 import classes from "./RepoFinder.module.css";
 import { DetailsComponent } from "../RepoDetails/RepoDetails";
 import { RepoList } from "../RepoDetails/RepoList";
 import { UserDetails } from "../RepoDetails/UserDetail";
 import { QueriesList } from "../RepoDetails/historyList";
-
-// const octokit = new Octokit(); // Instancia de Octokit para poder hacer la paginación
 
 export const RepoFinder = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,7 +13,9 @@ export const RepoFinder = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const [queryList, setQueryList] = useState([]);
+  const [queryList, setQueryList] = useState([]); // para listar las queries de la BD
+
+  const [selectedQuery, setSelectedQuery] = useState(null); // para seleccionar una query en particular de las listadas
 
   const urlQueries = "http://localhost:3000/api/github/queries";
 
@@ -35,14 +34,15 @@ export const RepoFinder = () => {
     fetchQueries();
   }, [results]);
 
+  // METODOS PARA BORRAR UNA QUERY EN PARTICULAR
   const deleteQuery = (id) => {
     const filteredQueryList = queryList.filter((query) => query._id !== id);
-
     setQueryList(filteredQueryList);
   };
 
   const deleteQueryClick = async (query) => {
     if (query) {
+      setSelectedQuery(query); //
       const urlDelete = `http://localhost:3000/api/github/delete/${query._id}`;
       try {
         const response = await fetch(urlDelete, { method: "Delete" });
@@ -55,19 +55,21 @@ export const RepoFinder = () => {
     }
   };
 
-  // useEffect(() => {
-  //     deleteQueryClick();
-  // } , [handleQueryClick]);
-
-  const handleSearch = async () => {
+  // METODO PARA BUSCAR REPOS O USUARIOS
+  const handleSearch = async (searchTermToUse) => {
     try {
       let response;
       let data;
-      const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTerm}`;
-      const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTerm}`;
+
+      // const searchTermToUse = selectedQuery ? selectedQuery.searchTerm : searchTerm; // si hay una query seleccionada, usa el searchTerm de la query, sino usa el searchTerm del input
+      // const searchTermToUse = e;
+      const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTermToUse}`;
+      const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTermToUse}`;
+      // const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTerm}`;
+      // const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTerm}`;
 
       // Verificar si el input parece ser un nombre de usuario (empieza con @)
-      if (searchTerm.startsWith("@")) {
+      if (searchTermToUse.startsWith("@")) {
         // Si el input empieza con @, buscar usuario
         // const username = searchTerm.substring(1); // Eliminar el @ del input
         // response = await octokit.users.getByUsername({ username });
@@ -77,6 +79,9 @@ export const RepoFinder = () => {
           try {
             response = await fetch(urlUsers);
             data = await response.json();
+
+            setSelectedQuery(null); // para que no quede seleccionada la query
+
           } catch (error) {
             console.log("Error:  ", error.message);
           }
@@ -142,7 +147,7 @@ export const RepoFinder = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className={classes.button} onClick={handleSearch}>
+        <button className={classes.button} onClick={ () => handleSearch(searchTerm)}>
           Buscar
         </button>
       </div>
@@ -158,6 +163,7 @@ export const RepoFinder = () => {
         // Código para mostrar la lista de repositorios y la paginación
 
         <div className={classes.dosColumnas}>
+          {/* <div className={classes.repoListContainer}> */}
           <RepoList results={results} handleItemClick={handleItemClick} />
 
           {/* Agrega el componente de paginación */}
@@ -175,7 +181,7 @@ export const RepoFinder = () => {
 
       <div>
         <h2>Historial de Busquedas</h2>
-        <QueriesList queries={queryList} handleQueryClick={deleteQueryClick} />
+        <QueriesList queries={queryList} handleQueryClick={deleteQueryClick} handleUpdateClick={handleSearch} />
       </div>
     </div>
   );

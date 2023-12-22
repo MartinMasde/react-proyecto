@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import classes from "./RepoDetails.module.css";
-// import { useEffect } from "react";
 
-export const QueriesList = ({ queries, handleQueryClick }) => {
+export const QueriesList = ({ queries, handleQueryClick, handleUpdateClick }) => {
   const formatDate = (date) => {
     const options = {
       day: "numeric",
@@ -25,8 +24,8 @@ export const QueriesList = ({ queries, handleQueryClick }) => {
                   <strong>Tipo de Repositorio: </strong> {" "}{query.searchType}{" "}
                   <strong>Fecha de busqueda:</strong> {" "}{formatDate(query.date)}{" "}
                   <br />
-                  <button className={classes.button2} onClick={() => handleQueryClick(query)}> Borrar</button>
-                  <button className={classes.button2} onClick={() => handleQueryClick(query)}> Modificar</button>
+                  <button className={classes.button2} onClick={() => handleQueryClick(query)}> BORRAR </button>
+                  <button className={classes.button2} onClick={() => handleUpdateClick(query.queryOptions.q)}> BUSCAR </button>
               </li>
             ))}
           </ul>
@@ -39,4 +38,5 @@ export const QueriesList = ({ queries, handleQueryClick }) => {
 QueriesList.propTypes = {
   queries: PropTypes.array,
   handleQueryClick: PropTypes.func,
+  handleUpdateClick: PropTypes.func
 };
