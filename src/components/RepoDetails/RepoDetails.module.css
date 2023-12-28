@@ -1,9 +1,9 @@
 .details {
-    box-shadow: 2px 2px 5px 0px rgba(75, 75, 75, 0.75);
-    padding: 0.2rem;
+  box-shadow: 2px 2px 5px 0px rgba(75, 75, 75, 0.75);
+  padding: 0.2rem;
 }
 .button {
-    padding: 1rem;
+  padding: 1rem;
 }
 .button2 {
   background-color: #2919d2;
@@ -19,33 +19,30 @@
   border-radius: 6px;
 }
 
-  .results li {
-    list-style-type: none;
-    margin-bottom: 5px;
-    cursor: pointer;
-    border: 1px solid black;
-    box-shadow: gray 0px 0px 5px;
-    border-color: rgb(159, 202, 226);
-    text-align: left;
-    padding: 3px;
-  }
+.results li {
+  list-style-type: none;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border: 1px solid black;
+  box-shadow: gray 0px 0px 5px;
+  border-color: rgb(159, 202, 226);
+  text-align: left;
+  padding: 3px;
+}
 
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .queriesList li {
-    list-style-type: none;
-    margin-bottom: 5px;
-    cursor: pointer;
-    border: 1px solid black;
-    box-shadow: gray 0px 0px 5px;
-    border-color: rgb(159, 202, 226);
-    text-align: left;
-    padding: 3px;
-  }
-
-
+.queriesList li {
+  list-style-type: none;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border: 1px solid black;
+  box-shadow: gray 0px 0px 5px;
+  border-color: rgb(159, 202, 226);
+  text-align: left;
+  padding: 3px;
+}

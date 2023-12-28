@@ -89,21 +89,6 @@ export const RepoFinder = () => {
     }
   };
 
-  // const deleteQueryClick = async (query) => {
-  //   if (query) {
-  //     setSelectedQuery(query); //
-  //     const urlDelete = `http://localhost:3000/api/github/delete/${query._id}`;
-  //     try {
-  //       const response = await fetch(urlDelete, { method: "Delete" });
-  //       if (response.ok) {
-  //         deleteQuery(query._id);
-  //       }
-  //     } catch (error) {
-  //       console.log("Error:  ", error.message);
-  //     }
-  //   }
-  // };
-
   // METODO PARA BUSCAR REPOS O USUARIOS EN GITHUB si el usuario esta autenticado
   const handleSearch = async (searchTermToUse) => {
     try {
@@ -172,42 +157,6 @@ export const RepoFinder = () => {
       console.error("Error: ", error.message);
     }
   };
-
-  //       const fetchData = async () => {
-  //         try {
-  //           response = await fetch(urlUsers);
-  //           data = await response.json();
-
-  //           setSelectedQuery(null); // para que no quede seleccionada la query
-  //         } catch (error) {
-  //           console.log("Error:  ", error.message);
-  //         }
-  //         return data;
-  //       };
-
-  //       response = await fetchData();
-  //       setResults(response.items);
-  //       setTotalPages(Math.ceil(response.total_count / 30));
-  //     } else {
-  //       // Si no empieza con @, busca el
-  //       const fetchData = async () => {
-  //         try {
-  //           response = await fetch(urlRepos);
-  //           data = await response.json();
-  //         } catch (error) {
-  //           console.log("Error:  ", error.message);
-  //         }
-  //         return data;
-  //       };
-  //       response = await fetchData();
-
-  //       setResults(response.items);
-  //       setTotalPages(Math.ceil(response.total_count / 30));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error: ", error.message);
-  //   }
-  // };
 
   useEffect(() => {
     handleSearch();

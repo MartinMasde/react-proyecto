@@ -13,7 +13,6 @@
   margin: 0 20px 0 0;
   min-width: 350px;
 }
-
 .button {
   background-color: #2919d2;
   border: none;
@@ -27,13 +26,9 @@
   cursor: pointer;
   border-radius: 6px;
 }
-
-
-
 .details {
   margin-top: 20px;
 }
-
 .app {
   display: flex;
   flex-direction: row;
@@ -43,15 +38,6 @@
   align-items: flex-end;
 
 }
-/* .listas {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  width: 50%;
-  border: 1px solid black;
-} */
 .dosColumas {
   display: grid;
   grid-template-columns: 1fr 1fr;
