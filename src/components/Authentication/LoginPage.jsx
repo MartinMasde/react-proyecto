@@ -29,18 +29,12 @@ const LoginPage = () => {
     try {
       await fetchAuth();
       if (authenticated) {
-        console.log(
-          `Usuario autenticado. Email: ${formData.email}, Contraseña: ${formData.password}, Modo de inicio de sesión: ${
-            isLogin ? "Login" : "Registro"
-          }`
-        );
+        alert("Usuario autenticado... Bienvenido!");
+        // console.log(`Usuario autenticado. Email: ${formData.email}, Contraseña: ${formData.password}, Modo de inicio de sesión: ${ isLogin ? "Login" : "Registro" }`);
         navHandler();
       } else {
-        console.log(
-          `Autenticacion Fallida. Email: ${formData.email}, Contraseña: ${formData.password}, Modo de inicio de sesión: ${
-            isLogin ? "Login" : "Registro"
-          }`
-        );
+        alert("Autenticación fallida. Intente nuevamente.");
+        // console.log(`Autenticacion Fallida. Email: ${formData.email}, Contraseña: ${formData.password}, Modo de inicio de sesión: ${ isLogin ? "Login" : "Registro" }`);
          navigate("/login");
       }
     } catch (error) {
@@ -67,6 +61,11 @@ const LoginPage = () => {
       if (response.ok) {
         localStorage.setItem("authToken", data.token);
         setAuthenticated(true);
+
+        if (!isLogin) {
+          navigate("/login");
+        }
+
 
       } else {
         throw new Error("Error en la autenticación o creación de usuario");
