@@ -7,7 +7,7 @@ export const UserDetails = ({ selectedItem, handleBack }) => {
       <div className={classes.details}>
         <h2>Nombre Usuario: {selectedItem.login}</h2>
         <p>
-        <strong>Avatar: </strong> <a href={selectedItem.avatar_url} target="_blank" rel="noopener noreferrer"> {selectedItem.avatar_url}</a>
+          <img src= {selectedItem.avatar_url} className={classes.avatar} alt= {`${selectedItem.login}'s avatar`} />
         </p>
         <p>
           <strong>URL: </strong> <a href={selectedItem.html_url} target="_blank" rel="noopener noreferrer"> {selectedItem.html_url}</a>
