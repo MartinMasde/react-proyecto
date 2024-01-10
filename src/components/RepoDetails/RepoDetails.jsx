@@ -9,8 +9,8 @@ export const DetailsComponent = ({ selectedItem, handleBack }) => {
         <p>
           <strong>Descripción: </strong> {selectedItem.description}
         </p>
-        <p>
-          <strong>Nombre Autor: </strong> {selectedItem.name}
+        <p className={classes.avatarParrafo}>
+          <strong>Nombre Autor: </strong> {selectedItem.name} <img src= {selectedItem.owner.avatar_url} className={classes.avatar} alt= {`${selectedItem.login}'s avatar`} />
         </p>
         <p>
           <strong>URL: </strong> <a href={selectedItem.html_url} target="_blank" rel="noopener noreferrer"> {selectedItem.html_url}</a>

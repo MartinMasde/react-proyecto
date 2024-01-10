@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Pagination, Box } from "@mui/material";
+import { Pagination, Box, Switch, Stack, Typography } from "@mui/material";
 import classes from "./RepoFinder.module.css";
 import { DetailsComponent } from "../RepoDetails/RepoDetails";
 import { RepoList } from "../RepoDetails/RepoList";
 import { UserDetails } from "../RepoDetails/UserDetail";
-import { QueriesList } from "../RepoDetails/historyList";
+import { useNavigate } from "react-router-dom";
 
 export const RepoFinder = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,94 +12,42 @@ export const RepoFinder = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [queryList, setQueryList] = useState([]); // para listar las queries de la BD
   // eslint-disable-next-line no-unused-vars
   const [authenticated, setAuthenticated] = useState(false); // para verificar si el usuario esta autenticado
   // eslint-disable-next-line no-unused-vars
   const [selectedQuery, setSelectedQuery] = useState(null); // para seleccionar una query en particular de las listadas
 
+  const navigate = useNavigate();
+
+  const handleHistoryClick = () => {  
+    navigate("/history");
+  };
 
   const storedToken = localStorage.getItem("authToken");
 
-  const urlQueries = "http://localhost:3000/api/github/queries";
-
-  // METODO PARA LISTAR LAS QUERIES DE LA BD si el usuario esta autenticado
-  const fetchQueries = async () => {
-    try {
-      // const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(urlQueries, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-
-      if (storedToken) {
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
-      setQueryList(data);
-    } catch (error) {
-      console.log("Error:  ", error.message);
-    }
-  };
-
-  // const fetchQueries = async () => {
-  //   try {
-  //     const response = await fetch(urlQueries);
-  //     const data = await response.json();
-  //     setQueryList(data);
-  //   } catch (error) {
-  //     console.log("Error:  ", error.message);
-  //   }
-  // };
-
-  useEffect(() => {
-    fetchQueries();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [results]);
-
-  // METODOS PARA BORRAR UNA QUERY EN PARTICULAR DE LA BD si el usuario esta autenticado
-  const deleteQuery = (id) => {
-    const filteredQueryList = queryList.filter((query) => query._id !== id);
-    setQueryList(filteredQueryList);
-  };
-
-  const deleteQueryClick = async (query) => {
-    if (query) {
-      setSelectedQuery(query); 
-      const urlDelete = `http://localhost:3000/api/github/delete/${query._id}`;
-      try {
-        const response = await fetch(urlDelete, { 
-          method: "Delete",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.ok) {
-          deleteQuery(query._id);
-        }
-      } catch (error) {
-        console.log("Error:  ", error.message);
-      }
-    }
-  };
-
   // METODO PARA BUSCAR REPOS O USUARIOS EN GITHUB si el usuario esta autenticado
-  const handleSearch = async (searchTermToUse) => {
+
+  const [searchType, setSearchType] = useState("repos"); // para buscar repos o usuarios
+
+  const handleSearch = async (searchTermToUse, type) => {
     try {
+
+      // setPage(1); // para que cuando se haga una nueva busqueda, se vuelva a la pagina 1
+
       let response;
       let data;
 
-      const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTermToUse}`;
-      const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTermToUse}`;
+      // Para manejar la paginación
+      const per_page = 30;
+      const startIndex = (page - 1) * per_page;
+
+      const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTermToUse}&page=${page}&per_page=${per_page}&start_index=${startIndex}`;
+      // const urlUsers = `http://localhost:3000/api/github/search/users?username=${searchTermToUse}&page=${page}&per_page=${per_page}`;
+      const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTermToUse}&page=${page}&per_page=${per_page}`;
+      // const urlRepos = `http://localhost:3000/api/github/search/repos?repoName=${searchTermToUse}&page=${page}&per_page=${per_page}&start_index=${startIndex}`;
 
       // Verificar si el input parece ser un nombre de usuario (empieza con @) // Si el input empieza con @, buscar usuario
-      if (searchTermToUse.startsWith("@")) {
+      if (type === "users") {
         const fetchData = async () => {
           try {
             response = await fetch(urlUsers, {
@@ -159,8 +107,8 @@ export const RepoFinder = () => {
   };
 
   useEffect(() => {
-    handleSearch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    handleSearch(searchTerm, searchType, page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]); // Se ejecuta cada vez que cambia la página
 
   // asignar que tipo de item es
@@ -186,20 +134,43 @@ export const RepoFinder = () => {
 
   return (
     <div>
-      <div className="search-bar">
+      <div className={classes.searchBar}>
         <input
           className={classes.input}
           type="text"
-          placeholder="Buscar por repositorio o por usuario agregar ´@´ adelante"
+          placeholder="Ingrese su busqueda"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button
-          className={classes.button}
-          onClick={() => handleSearch(searchTerm)}
+        <br />
+        <Stack
+          direction="row"
+          justifyContent="center"
+          spacing={1}
+          alignItems="center"
         >
-          Buscar
-        </button>
+          <Typography>Repositorio</Typography>
+          <Switch
+            checked={searchType === "users"} // si es users, el switch esta activado
+            onChange={() =>
+              setSearchType(searchType === "repos" ? "users" : "repos")
+            } //cambio de repos a users
+            inputProps={{ "aria-label": "controlled" }}
+          />
+          <Typography>Usuarios</Typography>
+        </Stack>
+        <br />
+        <div className={classes.buttonBar}>
+          <button
+            className={classes.button}
+            onClick={() => handleSearch(searchTerm, searchType)}
+          >
+            Buscar
+          </button>
+          <button className={classes.button} onClick={handleHistoryClick}>
+            Historial
+          </button>
+        </div>
       </div>
 
       {/*  Código para mostrar los detalles del usuario o del repositorio  */}
@@ -228,15 +199,6 @@ export const RepoFinder = () => {
           </Box>
         </div>
       )}
-
-      <div>
-        <h2>Historial de Busquedas</h2>
-        <QueriesList
-          queries={queryList}
-          handleQueryClick={deleteQueryClick}
-          handleUpdateClick={handleSearch}
-        />
-      </div>
     </div>
   );
 };

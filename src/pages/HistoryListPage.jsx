@@ -1,8 +1,9 @@
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea, CardActions } from '@mui/material';
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import { CardActionArea, CardActions } from "@mui/material";
+import { HistoryQueries } from "../components/RepoFinder/HistoryQueries";
 
-export default function HomeCard() {
+export default function HistoryList() {
   return (
     <Card sx={{ maxWidth: "60vw" }}>
       <CardActionArea>
@@ -14,10 +15,10 @@ export default function HomeCard() {
           alt="GitHub Logo"
         />
       </CardActionArea>
-      <CardActions sx={{justifyContent: 'center', margin: '10px'}}>
+      <CardActions sx={{ justifyContent: "center", margin: "10px" }}>
 
-        
- 
+        <HistoryQueries />
+
       </CardActions>
     </Card>
   );
